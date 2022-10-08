@@ -1,11 +1,6 @@
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/*
-TODO - get this working.
-If I use node, it fails to find source files
-If I use browser, it fails to find the browser
- */
 class TestClient {
     @Test
     fun testGreet() {
