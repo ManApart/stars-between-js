@@ -1,6 +1,7 @@
 :root {
   --background: black;
   --panel-background: #aa8960;
+  --tile-width: 80px;
 }
 
 ::-webkit-scrollbar {
@@ -49,6 +50,10 @@ button:hover{
   background-color: var(--bio-background);
 }
 
+select {
+    color: black;
+}
+
 table {
     margin-right: 20px;
     margin-left: 20px;
@@ -63,14 +68,14 @@ tr {
 td {
     padding: 0px;
     margin: 0px;
-    width: 20px;
-    height: 20px;
+    width: var(--tile-width);
+    height: var(--tile-width);
     overflow: hidden;
 }
 
 .tile-image {
     position: absolute;
-    width: 20px;
+    width: var(--tile-width);
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
@@ -86,4 +91,20 @@ td {
 
 .rotate-270 {
     transform: rotate(270deg);
+}
+
+#build-controls {
+    display: inline-block;
+    vertical-align: top;
+}
+
+#floorPlan-view {
+    display: inline-block;
+}
+
+#current-tool {
+    width: var(--tile-width);
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
 }

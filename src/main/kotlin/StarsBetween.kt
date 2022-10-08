@@ -15,7 +15,7 @@ fun main() {
 }
 
 fun clearSections() {
-    el("main-content").innerHTML = ""
+    el<HTMLElement>("main-content").innerHTML = ""
 }
 
-fun el(id: String) = document.getElementById(id)!!
+fun <T> el(id: String) = document.getElementById(id) as T

@@ -15,4 +15,8 @@ enum class SystemType {
         return this == ENGINE || this == WIRE_FLOOR || this == WIRE_WALL
     }
 
+    fun getImage(): String {
+        return "./tiles/${name.lowercase()}-none.png"
+    }
+
 }
