@@ -1,36 +1,40 @@
-import kotlinx.browser.localStorage
+import floorplan.Ship
+import game.Game
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import org.w3c.dom.Element
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.get
-import org.w3c.dom.set
-import org.w3c.files.Blob
-import org.w3c.files.FileReader
+import persistence.PersistedCrewMan
+import persistence.PersistedFloorPlan
 import kotlin.js.Promise
-import kotlin.js.Promise.Companion.resolve
 
 @Serializable
-data class InMemoryStorage(
-val id: String = "stuff"
-)
+data class PersistedShip(
+    val floorPlan: PersistedFloorPlan,
+    val crew: MutableMap<Int, PersistedCrewMan>
+) {
+    fun toShip(): Ship {
+        val plan = floorPlan.toFloorPlan()
+        return Ship(plan, crew.mapValues { (id, man) -> man.toCrewMan(id, plan) }.toMutableMap())
+    }
+}
 
-private var inMemoryStorage = InMemoryStorage()
+fun Ship.persisted(): PersistedShip {
+    return PersistedShip(PersistedFloorPlan(floorPlan), crew.mapValues { (id, man) -> PersistedCrewMan(man) }.toMutableMap())
+}
+
 val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
 
 fun createDB() {
 }
 
 fun persistMemory() {
-    LocalForage.setItem("memory", jsonMapper.encodeToString(inMemoryStorage))
+    LocalForage.setItem("memory", jsonMapper.encodeToString(Game.ship.persisted()))
 }
 
 fun loadMemory(): Promise<*> {
     return LocalForage.getItem("memory").then { persisted ->
         if (persisted != null && persisted != undefined) {
-            inMemoryStorage = jsonMapper.decodeFromString(persisted as String)
+            Game.ship = jsonMapper.decodeFromString<PersistedShip>(persisted as String).toShip()
         }
     }
 }

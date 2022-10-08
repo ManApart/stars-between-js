@@ -3,16 +3,19 @@ package pages
 import clearSections
 import el
 import favicon
+import floorplan.Ship
 import game.Game
 import kotlinx.browser.document
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
+import loadMemory
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.HTMLParagraphElement
 import org.w3c.dom.HTMLSelectElement
+import persistMemory
 import power.Engine
 import tile.SystemType
 import tile.Tile
@@ -52,6 +55,24 @@ private fun TagConsumer<HTMLElement>.buildControls() {
 
                     el<HTMLImageElement>("current-tool").src = currentTool.getImage()
                 }
+            }
+        }
+        button {
+            +"Save"
+            onClickFunction = {
+                persistMemory()
+            }
+        }
+        button {
+            +"Load"
+            onClickFunction = {
+                loadMemory().then { shipBuildView() }
+            }
+        }
+        button {
+            +"Reset"
+            onClickFunction = {
+                Game.ship = Ship()
             }
         }
     }

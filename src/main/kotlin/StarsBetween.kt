@@ -10,7 +10,8 @@ fun main() {
     window.onload = {
         favicon = document.getElementById("favicon") as HTMLElement
         createDB()
-        shipBuildView()
+//        shipBuildView()
+        loadMemory().then { shipBuildView() }
     }
 }
 
