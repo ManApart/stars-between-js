@@ -3,6 +3,7 @@ package tile
 import airflow.Vent
 import crew.CrewMan
 import floorplan.Position
+import kotlinx.html.ThScope
 import power.Engine
 import power.Wire
 import shipStructor.Floor
@@ -28,7 +29,7 @@ val defaultTiles = listOf(
 )
 
 fun getDefault(type: SystemType): Tile {
-    return defaultTiles.firstOrNull{ it.system.type == type } ?: DEFAULT_TILE
+    return defaultTiles.firstOrNull { it.system.type == type } ?: DEFAULT_TILE
 }
 
 data class Tile(
@@ -52,5 +53,9 @@ data class Tile(
 
     override fun toString(): String {
         return "$position, air: $air, system: $system"
+    }
+
+    fun getTileImage(): String {
+        return "./tiles/${system.type.name.lowercase()}-${adjacency.fileName()}.png"
     }
 }

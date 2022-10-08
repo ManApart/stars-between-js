@@ -8,6 +8,7 @@ enum class Adjacency(val getRotation: (Boolean, Boolean, Boolean, Boolean) -> In
     THREE_SIDE(threeSideRotation),
     ALL(randomRotation);
 
+    fun fileName() = name.lowercase().replace("_", "-")
 }
 
 private val noRotation = fun(_: Boolean, _: Boolean, _: Boolean, _: Boolean): Int {
