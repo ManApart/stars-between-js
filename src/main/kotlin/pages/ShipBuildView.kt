@@ -8,6 +8,7 @@ import floorplan.Position
 import floorplan.Ship
 import game.Game
 import kotlinx.browser.document
+import kotlinx.dom.addClass
 import kotlinx.html.*
 import kotlinx.html.dom.append
 import kotlinx.html.js.onChangeFunction
@@ -25,8 +26,8 @@ import tile.Tile
 import tile.getDefault
 import uiTicker
 
-private var viewMode = ShipViewMode.SHIELDS
-private var currentTool = SystemType.FLOOR
+private var viewMode = ShipViewMode.BUILD
+private var currentTool = SystemType.WIRE_FLOOR
 private var tileToImage = mutableMapOf<Tile, HTMLImageElement>()
 private var tileToText = mutableMapOf<Tile, HTMLSpanElement>()
 
@@ -71,7 +72,7 @@ private fun TagConsumer<HTMLElement>.buildControls() {
             SystemType.values().forEach { type ->
                 option {
                     value = type.name
-                    +type.name.lowercase().capitalize()
+                    +type.name.lowercase().split("_").joinToString(" ") { it.capitalize() }
                     selected = type == currentTool
                 }
                 onChangeFunction = {
@@ -201,6 +202,7 @@ private fun FloorPlan.tileClicked(position: Position) {
             tileToImage[tile]?.src = newTile.getTileImage()
             tileToText.move(tile, newTile)
             tileToImage.move(tile, newTile)
+            repaintTileImages(position)
         }
 
         ShipViewMode.DISTANCE -> {
@@ -209,5 +211,18 @@ private fun FloorPlan.tileClicked(position: Position) {
 
         else -> println("Clicked ${tile.position}")
     }
+}
+
+
+private fun repaintTileImages(source: Position) {
+    listOf(source, source.up(), source.down(), source.left(), source.right())
+        .map { Game.ship.floorPlan.getTile(it) }
+        .forEach { tile ->
+            with(tileToImage[tile]!!) {
+                src = tile.getTileImage()
+                classList.value = "tile-image rotate-${tile.rotation}"
+            }
+        }
+
 }
 
