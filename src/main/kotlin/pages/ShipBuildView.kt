@@ -20,13 +20,15 @@ import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.HTMLSpanElement
 import persistMemory
+import power.Engine
+import power.Powerable
 import systems.shields.Shield
 import tile.SystemType
 import tile.Tile
 import tile.getDefault
 import uiTicker
 
-private var viewMode = ShipViewMode.BUILD
+private var viewMode = ShipViewMode.POWER
 private var currentTool = SystemType.WIRE_FLOOR
 private var tileToImage = mutableMapOf<Tile, HTMLImageElement>()
 private var tileToText = mutableMapOf<Tile, HTMLSpanElement>()
@@ -182,7 +184,15 @@ private fun paintCrew() {
 }
 
 private fun paintPower() {
-
+    tileToText.entries.forEach { (tile, text) ->
+        if (tile.system.type == SystemType.ENGINE) {
+            val engine = tile.system as Engine
+            text.innerText = engine.power.toString()
+        } else if (tile.system is Powerable) {
+            val system = tile.system as Powerable
+            text.innerText = system.power.toString()
+        } else text.innerText = ""
+    }
 }
 
 private fun paintShields() {
