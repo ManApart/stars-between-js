@@ -19,12 +19,13 @@ import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.HTMLSpanElement
 import persistMemory
+import systems.shields.Shield
 import tile.SystemType
 import tile.Tile
 import tile.getDefault
 import uiTicker
 
-private var viewMode = ShipViewMode.BUILD
+private var viewMode = ShipViewMode.SHIELDS
 private var currentTool = SystemType.FLOOR
 private var tileToImage = mutableMapOf<Tile, HTMLImageElement>()
 private var tileToText = mutableMapOf<Tile, HTMLSpanElement>()
@@ -140,7 +141,11 @@ fun buildTileMap() {
 private fun paintShipView() {
     when (viewMode) {
         ShipViewMode.AIR -> paintAir()
-        else ->  tileToText.entries.forEach { (_, text) -> text.innerText = "" }
+        ShipViewMode.CREW -> paintCrew()
+        ShipViewMode.DISTANCE -> paintDistance()
+        ShipViewMode.POWER -> paintPower()
+        ShipViewMode.SHIELDS -> paintShields()
+        else -> tileToText.entries.forEach { (_, text) -> text.innerText = "" }
     }
 }
 
@@ -153,11 +158,37 @@ private fun paintAir() {
         }
     }
     tileToImage.entries.forEach { (tile, image) ->
-        if ( tile.system.type != SystemType.SPACE && !tile.system.isSolid() && tile.air < 50) {
+        if (tile.system.type != SystemType.SPACE && !tile.system.isSolid() && tile.air < 50) {
             image.style.opacity = "" + ((50 + tile.air) / 100.0)
         } else {
             image.style.opacity = "1"
         }
+    }
+}
+
+private fun paintDistance() {
+    tileToText.entries.forEach { (tile, text) ->
+        if (tile.distanceFromSelected != Int.MAX_VALUE) {
+            text.innerText = "" + tile.distanceFromSelected
+        } else {
+            text.innerText = ""
+        }
+    }
+}
+
+private fun paintCrew() {
+
+}
+
+private fun paintPower() {
+
+}
+
+private fun paintShields() {
+    tileToText.entries.forEach { (tile, text) ->
+        if (tile.system is Shield) {
+            text.innerText = "" + Game.ship.floorPlan.getId(tile.system)
+        } else text.innerText = ""
     }
 }
 
@@ -171,6 +202,11 @@ private fun FloorPlan.tileClicked(position: Position) {
             tileToText.move(tile, newTile)
             tileToImage.move(tile, newTile)
         }
+
+        ShipViewMode.DISTANCE -> {
+            setSelectedTile(tile)
+        }
+
         else -> println("Clicked ${tile.position}")
     }
 }
