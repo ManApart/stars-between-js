@@ -1,6 +1,7 @@
 package pages
 
 import clearSections
+import crew.CrewMan
 import el
 import favicon
 import floorplan.FloorPlan
@@ -15,10 +16,7 @@ import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import loadMemory
 import move
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLImageElement
-import org.w3c.dom.HTMLSelectElement
-import org.w3c.dom.HTMLSpanElement
+import org.w3c.dom.*
 import persistMemory
 import power.Engine
 import power.Powerable
@@ -28,8 +26,9 @@ import tile.Tile
 import tile.getDefault
 import uiTicker
 
-private var viewMode = ShipViewMode.POWER
+private var viewMode = ShipViewMode.CREW
 private var currentTool = SystemType.WIRE_FLOOR
+private var selectedCrewman: CrewMan? = null
 private var tileToImage = mutableMapOf<Tile, HTMLImageElement>()
 private var tileToText = mutableMapOf<Tile, HTMLSpanElement>()
 
@@ -39,14 +38,15 @@ fun shipBuildView() {
     document.title = "Build Ship"
     favicon.setAttribute("href", "favicon.png")
     section.append {
-        buildControls()
+        mainControls()
         floorPlanView()
     }
+    el<HTMLElement>("sub-controls").buildControls()
     buildTileMap()
     uiTicker = ::paintShipView
 }
 
-private fun TagConsumer<HTMLElement>.buildControls() {
+private fun TagConsumer<HTMLElement>.mainControls() {
     div {
         id = "build-controls"
         h2 { +"Controls" }
@@ -61,26 +61,8 @@ private fun TagConsumer<HTMLElement>.buildControls() {
                     }
                     onChangeFunction = {
                         viewMode = ShipViewMode.values()[el<HTMLSelectElement>("view-mode-select").selectedIndex]
+                        updateSubControls()
                     }
-                }
-            }
-        }
-        img {
-            id = "current-tool"
-            src = currentTool.getImage()
-        }
-        select {
-            id = "build-palette-select"
-            SystemType.values().forEach { type ->
-                option {
-                    value = type.name
-                    +type.name.lowercase().split("_").joinToString(" ") { it.capitalize() }
-                    selected = type == currentTool
-                }
-                onChangeFunction = {
-                    currentTool = SystemType.values()[el<HTMLSelectElement>("build-palette-select").selectedIndex]
-
-                    el<HTMLImageElement>("current-tool").src = currentTool.getImage()
                 }
             }
         }
@@ -102,6 +84,55 @@ private fun TagConsumer<HTMLElement>.buildControls() {
                 onClickFunction = {
                     Game.ship = Ship()
                 }
+            }
+        }
+        div { id = "sub-controls" }
+    }
+}
+
+fun updateSubControls() {
+    val source = el<HTMLElement>("sub-controls")
+    source.innerHTML = ""
+    when(viewMode){
+        in listOf(ShipViewMode.BUILD, ShipViewMode.POWER, ShipViewMode.AIR) -> source.buildControls()
+        ShipViewMode.CREW -> source.crewControls()
+        else -> {}
+    }
+}
+
+private fun HTMLElement.buildControls() {
+    append {
+        img {
+            id = "current-tool"
+            src = currentTool.getImage()
+        }
+        select {
+            id = "build-palette-select"
+            SystemType.values().forEach { type ->
+                option {
+                    value = type.name
+                    +type.name.lowercase().split("_").joinToString(" ") { it.capitalize() }
+                    selected = type == currentTool
+                }
+                onChangeFunction = {
+                    currentTool = SystemType.values()[el<HTMLSelectElement>("build-palette-select").selectedIndex]
+
+                    el<HTMLImageElement>("current-tool").src = currentTool.getImage()
+                }
+            }
+        }
+    }
+}
+private fun HTMLElement.crewControls() {
+    append {
+        button {
+            +"Add"
+            onClickFunction = {
+            }
+        }
+        button {
+            +"Remove"
+            onClickFunction = {
             }
         }
     }
@@ -156,16 +187,13 @@ private fun paintAir() {
     tileToText.entries.forEach { (tile, text) ->
         if (tile.air > 0) {
             text.innerText = "" + tile.air
-        } else {
-            text.innerText = ""
-        }
+        } else text.innerText = ""
+
     }
     tileToImage.entries.forEach { (tile, image) ->
         if (tile.system.type != SystemType.SPACE && !tile.system.isSolid() && tile.air < 50) {
             image.style.opacity = "" + ((50 + tile.air) / 100.0)
-        } else {
-            image.style.opacity = "1"
-        }
+        } else image.style.opacity = "1"
     }
 }
 
@@ -173,14 +201,16 @@ private fun paintDistance() {
     tileToText.entries.forEach { (tile, text) ->
         if (tile.distanceFromSelected != Int.MAX_VALUE) {
             text.innerText = "" + tile.distanceFromSelected
-        } else {
-            text.innerText = ""
-        }
+        } else text.innerText = ""
     }
 }
 
 private fun paintCrew() {
-
+    tileToText.entries.forEach { (tile, text) ->
+        if (tile == selectedCrewman?.goal) {
+            text.innerText = "G"
+        } else text.innerText = ""
+    }
 }
 
 private fun paintPower() {
