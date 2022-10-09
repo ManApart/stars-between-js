@@ -3,6 +3,8 @@ package pages
 import clearSections
 import el
 import favicon
+import floorplan.FloorPlan
+import floorplan.Position
 import floorplan.Ship
 import game.Game
 import kotlinx.browser.document
@@ -11,17 +13,21 @@ import kotlinx.html.dom.append
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import loadMemory
+import move
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
-import org.w3c.dom.HTMLParagraphElement
 import org.w3c.dom.HTMLSelectElement
+import org.w3c.dom.HTMLSpanElement
 import persistMemory
-import power.Engine
 import tile.SystemType
 import tile.Tile
 import tile.getDefault
+import uiTicker
 
-private var currentTool = SystemType.ENGINE
+private var viewMode = ShipViewMode.BUILD
+private var currentTool = SystemType.FLOOR
+private var tileToImage = mutableMapOf<Tile, HTMLImageElement>()
+private var tileToText = mutableMapOf<Tile, HTMLSpanElement>()
 
 fun shipBuildView() {
     val section = el<HTMLElement>("main-content")
@@ -32,12 +38,29 @@ fun shipBuildView() {
         buildControls()
         floorPlanView()
     }
+    buildTileMap()
+    uiTicker = ::paintShipView
 }
 
 private fun TagConsumer<HTMLElement>.buildControls() {
     div {
         id = "build-controls"
         h2 { +"Controls" }
+        div {
+            select {
+                id = "view-mode-select"
+                ShipViewMode.values().forEach { type ->
+                    option {
+                        value = type.name
+                        +type.name.lowercase().capitalize()
+                        selected = type == viewMode
+                    }
+                    onChangeFunction = {
+                        viewMode = ShipViewMode.values()[el<HTMLSelectElement>("view-mode-select").selectedIndex]
+                    }
+                }
+            }
+        }
         img {
             id = "current-tool"
             src = currentTool.getImage()
@@ -57,22 +80,24 @@ private fun TagConsumer<HTMLElement>.buildControls() {
                 }
             }
         }
-        button {
-            +"Save"
-            onClickFunction = {
-                persistMemory()
+        div {
+            button {
+                +"Save"
+                onClickFunction = {
+                    persistMemory()
+                }
             }
-        }
-        button {
-            +"Load"
-            onClickFunction = {
-                loadMemory().then { shipBuildView() }
+            button {
+                +"Load"
+                onClickFunction = {
+                    loadMemory().then { shipBuildView() }
+                }
             }
-        }
-        button {
-            +"Reset"
-            onClickFunction = {
-                Game.ship = Ship()
+            button {
+                +"Reset"
+                onClickFunction = {
+                    Game.ship = Ship()
+                }
             }
         }
     }
@@ -88,12 +113,15 @@ private fun TagConsumer<HTMLElement>.floorPlanView() {
                     row.forEach { tile ->
                         td {
                             img {
+                                id = "tile-${tile.position.x}-${tile.position.y}-image"
                                 classes = setOf("tile-image", "rotate-${tile.rotation}")
                                 src = tile.getTileImage()
                             }
+                            span("tile-text") {
+                                id = "tile-${tile.position.x}-${tile.position.y}-text"
+                            }
                             onClickFunction = {
-                                plan.setTile(getDefault(currentTool), tile.position.x, tile.position.y)
-                                shipBuildView()
+                                plan.tileClicked(tile.position)
                             }
                         }
                     }
@@ -102,3 +130,48 @@ private fun TagConsumer<HTMLElement>.floorPlanView() {
         }
     }
 }
+
+fun buildTileMap() {
+    val tiles = Game.ship.floorPlan.getAllTiles()
+    tileToImage = tiles.associateWith { tile -> el<HTMLImageElement>("tile-${tile.position.x}-${tile.position.y}-image") }.toMutableMap()
+    tileToText = tiles.associateWith { tile -> el<HTMLSpanElement>("tile-${tile.position.x}-${tile.position.y}-text") }.toMutableMap()
+}
+
+private fun paintShipView() {
+    when (viewMode) {
+        ShipViewMode.AIR -> paintAir()
+        else ->  tileToText.entries.forEach { (_, text) -> text.innerText = "" }
+    }
+}
+
+private fun paintAir() {
+    tileToText.entries.forEach { (tile, text) ->
+        if (tile.air > 0) {
+            text.innerText = "" + tile.air
+        } else {
+            text.innerText = ""
+        }
+    }
+    tileToImage.entries.forEach { (tile, image) ->
+        if ( tile.system.type != SystemType.SPACE && !tile.system.isSolid() && tile.air < 50) {
+            image.style.opacity = "" + ((50 + tile.air) / 100.0)
+        } else {
+            image.style.opacity = "1"
+        }
+    }
+}
+
+private fun FloorPlan.tileClicked(position: Position) {
+    val tile = getTile(position)
+    when (viewMode) {
+        in listOf(ShipViewMode.BUILD, ShipViewMode.AIR) -> {
+            setTile(getDefault(currentTool), tile.position.x, tile.position.y)
+            val newTile = getTile(tile.position)
+            tileToImage[tile]?.src = newTile.getTileImage()
+            tileToText.move(tile, newTile)
+            tileToImage.move(tile, newTile)
+        }
+        else -> println("Clicked ${tile.position}")
+    }
+}
+

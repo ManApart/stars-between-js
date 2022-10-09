@@ -1,6 +1,7 @@
 :root {
   --background: black;
-  --panel-background: #aa8960;
+  --panel-background: gray;
+  --panel-background-dark: #3a3a3a;
   --tile-width: 80px;
 }
 
@@ -34,9 +35,9 @@ h4{
 }
 
 button {
-  background-color: var(--card-background);
+  background-color: var(--panel-background);
   border: none;
-  color: black;
+  color: white;
   padding: 15px 32px;
   text-align: center;
   text-decoration: none;
@@ -47,7 +48,7 @@ button {
 }
 
 button:hover{
-  background-color: var(--bio-background);
+  background-color: var(--panel-background-dark);
 }
 
 select {
@@ -107,4 +108,12 @@ td {
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+}
+
+.tile-text {
+    font-size: 40px;
+    color: var(--panel-background);
+    width: var(--tile-width);
+    position: absolute;
+    text-align: center;
 }

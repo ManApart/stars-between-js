@@ -3,14 +3,16 @@ import game.Game
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import persistence.PersistedCrewMan
-import persistence.PersistedFloorPlan
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import persistence.*
 import kotlin.js.Promise
 
 @Serializable
 data class PersistedShip(
     val floorPlan: PersistedFloorPlan,
-    val crew: MutableMap<Int, PersistedCrewMan>
+    val crew: Map<Int, PersistedCrewMan>
 ) {
     fun toShip(): Ship {
         val plan = floorPlan.toFloorPlan()
@@ -19,10 +21,23 @@ data class PersistedShip(
 }
 
 fun Ship.persisted(): PersistedShip {
-    return PersistedShip(PersistedFloorPlan(floorPlan), crew.mapValues { (id, man) -> PersistedCrewMan(man) }.toMutableMap())
+    return PersistedShip(PersistedFloorPlan(floorPlan), crew.mapValues { (id, man) -> PersistedCrewMan(man) })
 }
 
-val jsonMapper = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+val jsonMapper = Json {
+    ignoreUnknownKeys = true
+    serializersModule = SerializersModule {
+        polymorphic(PersistedSystem::class) {
+            subclass(PersistedEngine::class, PersistedEngine.serializer())
+            subclass(PersistedFloor::class, PersistedFloor.serializer())
+            subclass(PersistedShield::class, PersistedShield.serializer())
+            subclass(PersistedSpace::class, PersistedSpace.serializer())
+            subclass(PersistedVent::class, PersistedVent.serializer())
+            subclass(PersistedWall::class, PersistedWall.serializer())
+            subclass(PersistedWire::class, PersistedWire.serializer())
+        }
+    }
+}
 
 fun createDB() {
 }

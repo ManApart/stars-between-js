@@ -48,3 +48,9 @@ fun getPercent(amount: Int, total: Int): Float {
     val center = (total / 2).toFloat()
     return (amount - center) / center
 }
+
+fun <K, V> MutableMap<K, V>.move(sourceKey: K, destinationKey: K) {
+    val value = this[sourceKey]
+    remove(sourceKey)
+    value?.let { put(destinationKey, it) }
+}
