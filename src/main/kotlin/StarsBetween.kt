@@ -5,6 +5,7 @@ import org.w3c.dom.HTMLElement
 import pages.*
 
 const val tickRate = 300
+const val tileSize = 80
 lateinit var favicon: HTMLElement
 var uiTicker: () -> Unit = {}
 

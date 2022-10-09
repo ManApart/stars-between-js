@@ -115,6 +115,10 @@ class FloorPlan(val size: Int = 5) {
         }
     }
 
+    fun getSelectedTile(): Tile {
+        return selectedTile
+    }
+
     fun updateSystemsById() {
         val map = SystemType.values().associate { it to mutableMapOf<Int, Tile>() }
         getAllTiles().forEach {

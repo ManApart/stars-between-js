@@ -101,6 +101,7 @@ td {
 
 #floorPlan-view {
     display: inline-block;
+    position: relative;
 }
 
 #current-tool {
@@ -114,6 +115,20 @@ td {
     font-size: 40px;
     color: var(--panel-background);
     width: var(--tile-width);
+    height: var(--tile-width);
     position: absolute;
     text-align: center;
+}
+
+.selected-tile {
+    box-sizing: border-box;
+    border: 10px solid var(--panel-background);
+}
+
+.crewman{
+    position: absolute;
+    background-color: red;
+    border-radius: 50%;
+    width: var(--tile-width);
+    height: var(--tile-width);
 }
