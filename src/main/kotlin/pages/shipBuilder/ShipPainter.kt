@@ -1,4 +1,4 @@
-package pages
+package pages.shipBuilder
 
 import crew.CrewMan
 import floorplan.Position

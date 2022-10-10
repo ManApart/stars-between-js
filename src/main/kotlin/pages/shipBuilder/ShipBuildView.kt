@@ -1,13 +1,11 @@
-package pages
+package pages.shipBuilder
 
 import clearSections
 import crew.CrewMan
 import el
-import favicon
 import floorplan.FloorPlan
 import floorplan.Position
 import game.Game
-import kotlinx.browser.document
 import kotlinx.dom.addClass
 import kotlinx.dom.removeClass
 import kotlinx.html.*
@@ -18,13 +16,9 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.HTMLSpanElement
-import power.Engine
-import power.Powerable
-import systems.shields.Shield
 import tile.SystemType
 import tile.Tile
 import tile.getDefault
-import tileSize
 import uiTicker
 
 internal var viewMode = ShipViewMode.CREW
@@ -37,8 +31,6 @@ internal var crewToDiv = mutableMapOf<CrewMan, HTMLDivElement>()
 fun shipBuildView() {
     val section = el<HTMLElement>("main-content")
     clearSections()
-    document.title = "Build Ship"
-    favicon.setAttribute("href", "favicon.png")
     section.append {
         mainControls()
         floorPlanView()

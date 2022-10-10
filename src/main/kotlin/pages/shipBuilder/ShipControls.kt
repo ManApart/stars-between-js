@@ -1,4 +1,4 @@
-package pages
+package pages.shipBuilder
 
 import el
 import floorplan.Ship
@@ -12,6 +12,7 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
 import org.w3c.dom.HTMLSelectElement
+import pages.planetGen.planetGenView
 import persistMemory
 import tile.SystemType
 
@@ -53,6 +54,14 @@ internal fun TagConsumer<HTMLElement>.mainControls() {
                 +"Reset"
                 onClickFunction = {
                     Game.ship = Ship()
+                }
+            }
+        }
+        div {
+            button {
+                +"Planet"
+                onClickFunction = {
+                    planetGenView()
                 }
             }
         }

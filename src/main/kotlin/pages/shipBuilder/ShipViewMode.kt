@@ -1,4 +1,4 @@
-package pages
+package pages.shipBuilder
 
 enum class ShipViewMode {
     AIR,
