@@ -109,7 +109,7 @@ internal fun HTMLElement.crewControls() {
         button {
             +"Remove"
             onClickFunction = {
-                Game.ship.floorPlan.getSelectedTile().crewMan?.let { man ->
+                selectedCrewman?.let { man ->
                     Game.ship.removeCrewMan(man.id)
                     val dir = crewToDiv[man]
                     dir?.parentElement?.removeChild(dir)

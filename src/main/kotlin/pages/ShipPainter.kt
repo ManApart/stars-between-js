@@ -19,13 +19,16 @@ internal fun paintShipView() {
     }
     when (viewMode) {
         ShipViewMode.AIR -> paintAir()
-        ShipViewMode.CREW -> paintCrew()
+        ShipViewMode.CREW -> {
+            paintCrew()
+            paintCrewmen()
+        }
         ShipViewMode.DISTANCE -> paintDistance()
         ShipViewMode.POWER -> paintPower()
         ShipViewMode.SHIELDS -> paintShields()
         else -> {}
     }
-    paintCrewmen()
+
 }
 
 fun clearStyles() {
@@ -60,10 +63,8 @@ internal fun paintDistance() {
 }
 
 internal fun paintCrew() {
-    tileToText.entries.forEach { (tile, text) ->
-        if (tile == selectedCrewman?.goal) {
-            text.innerText = "G"
-        }
+    selectedCrewman?.goal?.let {
+        tileToText[it]?.innerText = "G"
     }
 }
 

@@ -108,10 +108,23 @@ private fun FloorPlan.tileClicked(position: Position) {
             repaintTileImages(position)
         }
 
-        in listOf(ShipViewMode.DISTANCE, ShipViewMode.CREW) -> {
+        ShipViewMode.DISTANCE -> {
             tileToText[getSelectedTile()]?.removeClass("selected-tile")
             setSelectedTile(tile)
             tileToText[getSelectedTile()]?.addClass("selected-tile")
+        }
+        ShipViewMode.CREW -> {
+            if (tile.crewMan != null){
+                selectedCrewman = tile.crewMan
+            } else {
+                tileToText[getSelectedTile()]?.let {
+                    it.innerText = ""
+                    it.removeClass("selected-tile")
+                }
+                setSelectedTile(tile)
+                selectedCrewman?.goal = getSelectedTile()
+                tileToText[getSelectedTile()]?.addClass("selected-tile")
+            }
         }
 
         else -> println("Clicked ${tile.position}")
