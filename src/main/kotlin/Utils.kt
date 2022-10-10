@@ -1,3 +1,4 @@
+import kotlin.js.Date
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
@@ -54,3 +55,5 @@ fun <K, V> MutableMap<K, V>.move(sourceKey: K, destinationKey: K) {
     remove(sourceKey)
     value?.let { put(destinationKey, it) }
 }
+
+fun epochMillis(): Long = Date.now().toLong()
