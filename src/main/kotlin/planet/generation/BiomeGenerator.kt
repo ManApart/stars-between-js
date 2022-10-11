@@ -1,23 +1,16 @@
 package planet.generation
 
 import jsonMapper
-import kotlinx.browser.window
 import kotlinx.serialization.decodeFromString
 import planet.Biome
 import planet.BiomeType
 
-class BiomeGenerator {
-    private var biomes = mapOf<String, List<Biome>>()
-
-    init {
-        window.window
-            .fetch("./biomes/EarthlikeBiomes.json")
-            .then { data -> parseBiomes(mapOf("EarthlikeBiomes.json" to data as String)) }
-    }
+class BiomeGenerator(biomeData: Map<String, String>) {
+    private var biomes = parseBiomes(biomeData)
 
     private fun parseBiomes(biomeFiles: Map<String, String>): Map<String, List<Biome>> {
         return biomeFiles.entries.associate { (fileName, fileContents) ->
-            fileName.replace(".json", "") to jsonMapper.decodeFromString(fileContents)
+            fileName to jsonMapper.decodeFromString(fileContents)
         }
     }
 

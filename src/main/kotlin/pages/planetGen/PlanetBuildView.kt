@@ -7,7 +7,6 @@ import kotlinx.html.id
 import kotlinx.html.js.canvas
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
-import planet.PlanetManager
 import planet.generation.PlanetOptions
 import planet.generation.PlanetViewOptions
 import uiTicker
@@ -27,6 +26,8 @@ fun planetGenView() {
         }
     }
     canvas = el("planet-view-canvas")
-    PlanetManager.generatePlanet(0, options)
-    canvas.drawPlanet(viewOptions)
+    PlanetManager.createGenerator().then {
+        PlanetManager.generatePlanet(0, options)
+        canvas.drawPlanet(viewOptions)
+    }
 }

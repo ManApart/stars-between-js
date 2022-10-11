@@ -2,11 +2,11 @@ package planet.generation
 
 import planet.Planet
 
-class PlanetGenerator {
+class PlanetGenerator(biomeData: Map<String, String>) {
     private val heightmapGen = HeightmapGenerator()
     private val temperatureGen = TemperatureGenerator()
     private val precipitationGen = PrecipitationGenerator()
-    private val biomeGen = BiomeGenerator()
+    private val biomeGen = BiomeGenerator(biomeData)
     private val regionGen = RegionGenerator()
     private val mapTiler = MapTiler()
     private val debugTimer = DebugTimer()
@@ -21,7 +21,7 @@ class PlanetGenerator {
         val temperatureMap = temperatureGen.generateTemperatureMap(options, heightMap)
         debugTimer.interval("Temperature Generation")
 
-        val precipitationMap: Array<IntArray> = precipitationGen.generatePrecipitationMap(with(options) { seed.toLong() }, heightMap, temperatureMap, options)
+        val precipitationMap: Array<IntArray> = precipitationGen.generatePrecipitationMap(with(options) { seed }, heightMap, temperatureMap, options)
         debugTimer.interval("Precipitation Generation")
 
         val biomes = biomeGen.getBiomes(options.biomeType)
