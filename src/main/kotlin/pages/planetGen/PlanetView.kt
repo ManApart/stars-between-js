@@ -18,8 +18,7 @@ private fun CanvasRenderingContext2D.drawAltitude(planet: Planet) {
     for (x in planet.regions.indices) {
         for (y in planet.regions.indices) {
             val altitude = planet.regions[x][y].altitude
-//            val color = altitudeSpectrum.getColor(altitude)
-            val color = ""
+            val color = altitudeSpectrum.getColor(altitude)
             imageData.pixel(color, x, y, imageSize)
         }
     }
@@ -27,12 +26,12 @@ private fun CanvasRenderingContext2D.drawAltitude(planet: Planet) {
     putImageData(imageData, 0.0, 0.0)
 }
 
-private fun ImageData.pixel(color: String, x: Int, y: Int, imageSize: Int) {
+private fun ImageData.pixel(color: RGB, x: Int, y: Int, imageSize: Int) {
     val i = 4 * (y * imageSize + x)
-    pixelData(this, i, 255)
-    pixelData(this, i + 1, 255)
-    pixelData(this, i + 2, 255)
-    pixelData(this, i + 3, 100)
+    pixelData(this, i, color.r)
+    pixelData(this, i + 1, color.g)
+    pixelData(this, i + 2, color.b)
+    pixelData(this, i + 3, 255)
 }
 
 private fun pixelData(imageData: ImageData, key: Int, value: Int) {
