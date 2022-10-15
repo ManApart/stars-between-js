@@ -1,6 +1,9 @@
 package planet
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import pages.planetGen.RGB
+import pages.planetGen.toRGB
 import kotlin.math.abs
 
 val DEFAULT_BIOME = Biome("DefaultBiome", "Barren Rock", "#5d382d")
@@ -10,7 +13,6 @@ class Biome(
     val id: String,
     val name: String,
     val color: String,
-
     val altitude: Int = 0,
     val temperature: Int = 0,
     val precipitation: Int = 0,
@@ -19,6 +21,9 @@ class Biome(
     private val temperatureVariation: Int = 0,
     private val precipitationVariation: Int = 0,
 ) {
+
+    @Transient
+    val rgb: RGB = color.toRGB()
 
     override fun toString(): String {
         return "$name a:$altitude, t:$temperature, p:$precipitation"
