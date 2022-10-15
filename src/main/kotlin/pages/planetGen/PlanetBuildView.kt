@@ -29,11 +29,15 @@ fun planetGenView() {
     }
     canvas = el("planet-view-canvas")
     PlanetManager.createGenerator().then {
-        PlanetManager.generatePlanet(0, options)
-        val planet = PlanetManager.getPlanet(0)
-        val size = planet.regions.size
-        canvas.setAttribute("width", "${size}px")
-        canvas.setAttribute("height", "${size}px")
-        (canvas.getContext("2d") as CanvasRenderingContext2D).drawPlanet(planet, viewOptions)
+        generateAndDisplayPlanet()
     }
+}
+
+fun generateAndDisplayPlanet() {
+    PlanetManager.generatePlanet(0, options)
+    val planet = PlanetManager.getPlanet(0)
+    val size = planet.regions.size
+    canvas.setAttribute("width", "${size}px")
+    canvas.setAttribute("height", "${size}px")
+    (canvas.getContext("2d") as CanvasRenderingContext2D).drawPlanet(planet, viewOptions)
 }
