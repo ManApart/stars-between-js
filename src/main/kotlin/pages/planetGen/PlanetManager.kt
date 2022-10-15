@@ -9,32 +9,36 @@ import kotlin.js.Json
 import kotlin.js.Promise
 
 object PlanetManager {
-    private lateinit var generator: PlanetGenerator
+    private var generator: PlanetGenerator? = null
     private val planets = mutableMapOf<Int, Planet>()
 
-    fun createGenerator(): Promise<Map<String, String>> {
+    fun createGenerator(): Promise<Boolean> {
         return Promise { resolve, _ ->
-            Promise.all(
-                BiomeType.values().map { it.fileName }
-                    .map { name ->
-                        val fileName = "./biomes/$name.json"
-                        window.fetch(fileName)
-                            .then { data -> data.json() }
-                            .then { data -> name to JSON.stringify(data as Json) }
-                    }.toTypedArray()
-            ).then { data ->
-                generator = PlanetGenerator(data.toMap())
-                resolve(data.toMap())
+            if (generator != null) {
+                resolve(true)
+            } else {
+                Promise.all(
+                    BiomeType.values().map { it.fileName }
+                        .map { name ->
+                            val fileName = "./biomes/$name.json"
+                            window.fetch(fileName)
+                                .then { data -> data.json() }
+                                .then { data -> name to JSON.stringify(data as Json) }
+                        }.toTypedArray()
+                ).then { data ->
+                    generator = PlanetGenerator(data.toMap())
+                    resolve(true)
+                }
             }
         }
     }
 
     fun generatePlanet(id: Int, planetOptions: PlanetOptions) {
-        planets[id] = generator.generatePlanet(planetOptions)
+        planets[id] = generator!!.generatePlanet(planetOptions)
     }
 
     fun getPlanet(id: Int): Planet {
-        return planets.getOrPut(id) { generator.generatePlanet(PlanetOptions()) }
+        return planets.getOrPut(id) { generator!!.generatePlanet(PlanetOptions()) }
     }
 
 

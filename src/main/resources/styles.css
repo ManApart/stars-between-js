@@ -132,3 +132,8 @@ td {
     width: var(--tile-width);
     height: var(--tile-width);
 }
+
+#planet-view-canvas {
+    transform: scale(5);
+    transform-origin: 0 0;
+}
