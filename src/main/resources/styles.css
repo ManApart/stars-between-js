@@ -24,6 +24,9 @@
 body {
   background-color: var(--background);
   color: white;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 h1 {
@@ -106,9 +109,6 @@ td {
 
 #current-tool {
     width: var(--tile-width);
-    image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
 }
 
 .tile-text {
