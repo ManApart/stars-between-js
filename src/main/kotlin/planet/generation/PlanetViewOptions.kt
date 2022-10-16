@@ -4,7 +4,7 @@ import pages.planetGen.PlanetViewType
 
 class PlanetViewOptions(
     var viewType: PlanetViewType = PlanetViewType.BIOME,
-    var sphere: Boolean = false,
+    var sphere: Boolean = true,
     var shadow: Boolean = false,
     var autoUpdate: Boolean = false
 )

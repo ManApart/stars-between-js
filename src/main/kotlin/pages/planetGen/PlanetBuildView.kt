@@ -14,7 +14,7 @@ import planet.generation.PlanetOptions
 import planet.generation.PlanetViewOptions
 import uiTicker
 
-internal val options = PlanetOptions()
+internal var options = PlanetOptions()
 internal var viewOptions = PlanetViewOptions()
 private lateinit var canvas: HTMLCanvasElement
 

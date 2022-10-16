@@ -2,6 +2,7 @@ package pages.planetGen
 
 import el
 import kotlinx.html.*
+import kotlinx.html.dom.append
 import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -11,6 +12,7 @@ import pages.dropDown
 import pages.rangeTableRow
 import pages.shipBuilder.shipBuildView
 import planet.BiomeType
+import planet.generation.PlanetOptions
 import random
 import kotlin.random.Random
 
@@ -20,7 +22,10 @@ internal fun TagConsumer<HTMLElement>.planetControls() {
         id = "build-controls"
         h2 { +"Controls" }
         viewControls()
-        generationControls()
+        div {
+            id = "generation-controls"
+            generationControls()
+        }
         div {
             button {
                 +"Ship"
@@ -50,7 +55,7 @@ private fun TagConsumer<HTMLElement>.generationControls() {
         rangeTableRow("Octaves", options::octaves, 1, 10, 1, ::autoGen)
         rangeTableRow("Roughness", options::roughness, 0, 2, 1, ::autoGen)
         rangeTableRow("Noise Scale", options::noiseScale, 1, 10, 1, ::autoGen)
-        rangeTableRow("Temperature", options::temperature, -200, 10000, 10, ::autoGen)
+        rangeTableRow("Temperature", options::temperature, -200, 1000, 10, ::autoGen)
         rangeTableRow("Temperature Variance", options::temperatureVariance, 0, 500, 1, ::autoGen)
         rangeTableRow("Temperature Factor", options::temperatureFactor, 1, 5, 1, ::autoGen)
         rangeTableRow("Default Precipitation", options::defaultPrecipitation, 0, 500, 1, ::autoGen)
@@ -64,6 +69,7 @@ private fun TagConsumer<HTMLElement>.generationControls() {
                 options.seed = random.nextLong(0, 10000)
                 el<HTMLInputElement>("seed-range").value = "${options.seed}"
                 el<HTMLLabelElement>("seed-range-cell").innerText = "${options.seed}"
+                if (viewOptions.autoUpdate) generateAndDisplayPlanet()
             }
         }
     }
@@ -71,7 +77,11 @@ private fun TagConsumer<HTMLElement>.generationControls() {
         button {
             +"Reset"
             onClickFunction = {
-
+                options = PlanetOptions()
+                val parent = el<HTMLElement>("generation-controls")
+                parent.innerHTML = ""
+                parent.append { generationControls() }
+                generateAndDisplayPlanet()
             }
         }
     }
