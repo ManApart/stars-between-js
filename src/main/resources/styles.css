@@ -137,3 +137,12 @@ td {
     transform: scale(5);
     transform-origin: 0 0;
 }
+
+.circle {
+    border-radius: 50%;
+}
+
+#planet-controls-table td{
+    width: inherit;
+    height: inherit;
+}

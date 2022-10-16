@@ -1,5 +1,7 @@
 package pages.planetGen
 
+import kotlinx.html.MATH
+import kotlinx.html.MATHML
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.ImageData
 import planet.Planet
@@ -7,15 +9,35 @@ import planet.generation.PlanetViewOptions
 
 internal fun CanvasRenderingContext2D.drawPlanet(planet: Planet, options: PlanetViewOptions) {
     val imageSize = planet.regions.size
-    val imageData = createImageData(imageSize.toDouble(), imageSize.toDouble())
+    val imageSizeD = planet.regions.size.toDouble()
+    val imageData = createImageData(imageSizeD, imageSizeD)
     for (x in planet.regions.indices) {
         for (y in planet.regions.indices) {
             val color = options.viewType.pixelColor(planet, x, y)
             imageData.pixel(color, x, y, imageSize)
         }
     }
-
     putImageData(imageData, 0.0, 0.0)
+
+//    drawShadow(options)
+}
+
+private fun CanvasRenderingContext2D.drawShadow(options: PlanetViewOptions) {
+    if (options.shadow) {
+        println("ap[ply shadow")
+//        val offset = imageSizeD / 10
+//        lineWidth = offset
+//        strokeStyle = "rgba(0,0,0,.5)"
+//        val pi = js("Math.PI") as Double
+        fillRect(0.0, 0.0, 10.0, 10.0)
+//        beginPath()
+//        arc(imageSizeD / 2 - offset, imageSizeD / 2 - offset, imageSizeD/2 , 0.0, 2 * pi)
+//        stroke()
+//        beginPath()
+//        arc(imageSizeD / 2, imageSizeD / 2, imageSizeD / 2, 0.0, 2 * pi)
+//        stroke()
+
+    }
 }
 
 private fun ImageData.pixel(color: RGB, x: Int, y: Int, imageSize: Int) {
