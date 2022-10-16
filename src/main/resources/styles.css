@@ -72,8 +72,6 @@ tr {
 td {
     padding: 0px;
     margin: 0px;
-    width: var(--tile-width);
-    height: var(--tile-width);
     overflow: hidden;
 }
 
@@ -107,6 +105,11 @@ td {
     position: relative;
 }
 
+#floorPlan-view td {
+    width: var(--tile-width);
+    height: var(--tile-width);
+}
+
 #current-tool {
     width: var(--tile-width);
 }
@@ -133,6 +136,11 @@ td {
     height: var(--tile-width);
 }
 
+#planet-view-canvas-div {
+    display: inline-block;
+    width: 500px;
+}
+
 #planet-view-canvas {
     transform: scale(5);
     transform-origin: 0 0;
@@ -142,7 +150,6 @@ td {
     border-radius: 50%;
 }
 
-#planet-controls-table td{
-    width: inherit;
-    height: inherit;
+#planet-region-info {
+    display: inline-block;
 }

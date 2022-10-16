@@ -1,7 +1,5 @@
 package pages.planetGen
 
-import kotlinx.html.MATH
-import kotlinx.html.MATHML
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.ImageData
 import planet.Planet

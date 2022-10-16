@@ -69,7 +69,7 @@ private fun TagConsumer<HTMLElement>.generationControls() {
                 options.seed = random.nextLong(0, 10000)
                 el<HTMLInputElement>("seed-range").value = "${options.seed}"
                 el<HTMLLabelElement>("seed-range-cell").innerText = "${options.seed}"
-                if (viewOptions.autoUpdate) generateAndDisplayPlanet()
+                generateAndDisplayPlanet()
             }
         }
     }
