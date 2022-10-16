@@ -5,11 +5,8 @@ data class RGB(val r: Int = 0, val g: Int = 0, val b: Int = 0) {
 }
 
 fun String.toRGB(): RGB {
-    val parts = match("/.{1,2}/g")
-    return if (parts == null) RGB() else {
-        val r = parts[0].toInt(16)
-        val g = parts[1].toInt(16)
-        val b = parts[2].toInt(16)
-        RGB(r, g, b)
-    }
+    val r = substring(1, 3).toInt(16)
+    val g = substring(3, 5).toInt(16)
+    val b = substring(5, 7).toInt(16)
+    return RGB(r, g, b)
 }
