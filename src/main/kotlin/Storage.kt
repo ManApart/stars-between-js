@@ -1,3 +1,4 @@
+import LocalForage.config
 import floorplan.Ship
 import game.Game
 import kotlinx.serialization.Serializable
@@ -40,6 +41,7 @@ val jsonMapper = Json {
 }
 
 fun createDB() {
+    config(LocalForageConfig("stars-between"))
 }
 
 fun persistMemory() {

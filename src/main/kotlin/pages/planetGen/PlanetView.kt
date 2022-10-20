@@ -17,24 +17,20 @@ internal fun CanvasRenderingContext2D.drawPlanet(planet: Planet, options: Planet
     }
     putImageData(imageData, 0.0, 0.0)
 
-//    drawShadow(options)
+    drawShadow(options, imageSizeD)
 }
 
-private fun CanvasRenderingContext2D.drawShadow(options: PlanetViewOptions) {
+private fun CanvasRenderingContext2D.drawShadow(options: PlanetViewOptions, imageSize: Double) {
     if (options.shadow) {
-        println("ap[ply shadow")
-//        val offset = imageSizeD / 10
-//        lineWidth = offset
-//        strokeStyle = "rgba(0,0,0,.5)"
-//        val pi = js("Math.PI") as Double
-        fillRect(0.0, 0.0, 10.0, 10.0)
-//        beginPath()
-//        arc(imageSizeD / 2 - offset, imageSizeD / 2 - offset, imageSizeD/2 , 0.0, 2 * pi)
-//        stroke()
-//        beginPath()
-//        arc(imageSizeD / 2, imageSizeD / 2, imageSizeD / 2, 0.0, 2 * pi)
-//        stroke()
+        val offset = imageSize / 10
+        val center = imageSize / 2 - offset
+        val pi = js("Math.PI") as Double
 
+        fillStyle = "rgba(0, 0, 0, 0.5)"
+        beginPath()
+        arc(center, center, imageSize / 2, 0.0, 2 * pi, true)
+        rect(0.0, 0.0, imageSize, imageSize)
+        fill()
     }
 }
 
