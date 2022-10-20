@@ -6,5 +6,5 @@ class PlanetViewOptions(
     var viewType: PlanetViewType = PlanetViewType.BIOME,
     var sphere: Boolean = true,
     var shadow: Boolean = true,
-    var autoUpdate: Boolean = false
+    var autoUpdate: Boolean = true
 )

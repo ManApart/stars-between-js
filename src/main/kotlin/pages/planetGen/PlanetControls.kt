@@ -46,18 +46,18 @@ private fun TagConsumer<HTMLElement>.viewControls() {
 private fun TagConsumer<HTMLElement>.generationControls() {
     checkBoxDiv("Auto Update", viewOptions::autoUpdate)
 
-    dropDown(options::biomeType, BiomeType.values().toList(), ::displayPlanet)
+    dropDown(options::biomeType, BiomeType.values().toList(), ::generateAndDisplayPlanet)
 
     table {
         id = "planet-controls-table"
         rangeTableRow("Seed", options::seed, 0, 10000, 1, ::autoGen)
         rangeTableRow("Density", options::density, 1, 500, 1, ::autoGen)
         rangeTableRow("Octaves", options::octaves, 1, 10, 1, ::autoGen)
-        rangeTableRow("Roughness", options::roughness, 0, 2, 1, ::autoGen)
-        rangeTableRow("Noise Scale", options::noiseScale, 1, 10, 1, ::autoGen)
+        rangeTableRow("Roughness", options::roughness, .3f, .7f, 0.01f, ::autoGen)
+        rangeTableRow("Noise Scale", options::noiseScale, 1f, 10f, 1f, ::autoGen)
         rangeTableRow("Temperature", options::temperature, -200, 1000, 10, ::autoGen)
         rangeTableRow("Temperature Variance", options::temperatureVariance, 0, 500, 1, ::autoGen)
-        rangeTableRow("Temperature Factor", options::temperatureFactor, 1, 5, 1, ::autoGen)
+        rangeTableRow("Temperature Factor", options::temperatureFactor, 1, 5, 1.0, ::autoGen)
         rangeTableRow("Default Precipitation", options::defaultPrecipitation, 0, 500, 1, ::autoGen)
         rangeTableRow("Water Threshold", options::waterThreshold, -200, 1000, 1, ::autoGen)
     }

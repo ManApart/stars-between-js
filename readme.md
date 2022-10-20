@@ -14,6 +14,5 @@ jsBrowserDistribution
 ```
 aws s3 sync build/distributions/ s3://austinkucera.com/games/stars-between/
 
-
 ./gradlew jsBrowserDistribution && aws s3 sync build/distributions/ s3://austinkucera.com/games/stars-between/
 ```

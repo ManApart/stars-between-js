@@ -41,16 +41,16 @@ fun TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMuta
     rangeTableRow(label, backingProperty, { it.toInt() }, min, max, step, onUpdate)
 
 fun TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMutableProperty0<Long>, min: Int = 0, max: Int = 100, step: Int = 1, onUpdate: () -> Unit = {}) =
-    rangeTableRow(label, backingProperty, { it.toLong() }, min, max, step, onUpdate)
+    rangeTableRow(label, backingProperty, { it.toLong() }, min.toLong(), max.toLong(), step.toLong(), onUpdate)
 
-fun TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMutableProperty0<Float>, min: Int = 0, max: Int = 100, step: Int = 1, onUpdate: () -> Unit = {}) =
+fun TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMutableProperty0<Float>, min: Float = 0f, max: Float = 100f, step: Float = 1f, onUpdate: () -> Unit = {}) =
     rangeTableRow(label, backingProperty, { it.toFloat() }, min, max, step, onUpdate)
 
-fun TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMutableProperty0<Double>, min: Int = 0, max: Int = 100, step: Int = 1, onUpdate: () -> Unit = {}) =
-    rangeTableRow(label, backingProperty, { it.toDouble() }, min, max, step, onUpdate)
+fun TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMutableProperty0<Double>, min: Int = 0, max: Int = 100, step: Double = 1.0, onUpdate: () -> Unit = {}) =
+    rangeTableRow(label, backingProperty, { it.toDouble() }, min.toDouble(), max.toDouble(), step, onUpdate)
 
 
-private fun <T> TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMutableProperty0<T>, backingPropertyUpdater: (String) -> T, min: Int, max: Int, step: Int, onUpdate: () -> Unit = {}) {
+private fun <T> TagConsumer<HTMLElement>.rangeTableRow(label: String, backingProperty: KMutableProperty0<T>, backingPropertyUpdater: (String) -> T, min: T, max: T, step: T, onUpdate: () -> Unit = {}) {
     tr {
         td { +label }
         td {
