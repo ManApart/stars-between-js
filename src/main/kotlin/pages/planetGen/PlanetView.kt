@@ -2,13 +2,14 @@ package pages.planetGen
 
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.ImageData
+import pi
 import planet.Planet
 import planet.generation.PlanetViewOptions
 
 internal fun CanvasRenderingContext2D.drawPlanet(planet: Planet, options: PlanetViewOptions) {
     val imageSize = planet.regions.size
     val imageSizeD = planet.regions.size.toDouble()
-    val imageData = createImageData(imageSizeD, imageSizeD)
+    val imageData = getImageData(0.0,0.0,imageSizeD, imageSizeD)
     for (x in planet.regions.indices) {
         for (y in planet.regions.indices) {
             val color = options.viewType.pixelColor(planet, x, y)
@@ -24,7 +25,6 @@ private fun CanvasRenderingContext2D.drawShadow(options: PlanetViewOptions, imag
     if (options.shadow) {
         val offset = imageSize / 10
         val center = imageSize / 2 - offset
-        val pi = js("Math.PI") as Double
 
         fillStyle = "rgba(0, 0, 0, 0.5)"
         beginPath()

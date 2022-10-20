@@ -1,5 +1,7 @@
 import kotlin.js.Promise
 
+val pi = js("Math.PI") as Double
+
 @JsModule("localforage")
 @JsNonModule
 external object LocalForage {
